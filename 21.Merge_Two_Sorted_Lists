@@ -109,6 +109,8 @@ The first call to mergeTwoLists does not return until the ends of both l1 and l2
      so n + m stack frames consume O(n+m) space.
 
      */
+    // 具体的递归过程需要在纸上想想， l1和l2指针逐一向后移动，然后递归结束后，指针再向前一个一个往前移动
+    // 具体的递归过程可以通过clion的gdb观察具体的变化
     ListNode* mergeTwoLists1(ListNode* l1, ListNode* l2) {
         //返回条件
         if(l1 == NULL)  return l2;
@@ -189,7 +191,7 @@ int main() {
     ListNode* l2 = new ListNode(1);
     l2->next = new ListNode(3);
     l2->next->next = new ListNode(4);
-    ListNode* result = s.mergeTwoLists2(l1, l2);
+    ListNode* result = s.mergeTwoLists1(l1, l2);
     while(result) {
         cout<<result->val<<'\t';
         if(result->next) {
