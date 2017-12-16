@@ -52,6 +52,8 @@ public:
             count++;
         }
         if(count == k) {
+            // 这里的返回值，回溯过程中每次返回的head，然后赋值给curr
+            // head指向将要逆序的首节点，curr指向已经完成好的首节点，是通过回溯返回值head指定的
             curr = reverseKGroup(curr, k);
             while(count-- > 0) {
                 ListNode *next = head->next;
@@ -60,6 +62,7 @@ public:
                 curr = head;
                 head = next;
             }
+
             head = curr;
         }
         return head;
