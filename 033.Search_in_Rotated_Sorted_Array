@@ -1,0 +1,98 @@
+/**
+ * Suppose an array sorted in ascending order is rotated at some pivot unknown to you beforehand.
+
+(i.e., 0 1 2 4 5 6 7 might become 4 5 6 7 0 1 2).
+
+You are given a target value to search. If found in the array return its index, otherwise return -1.
+
+You may assume no duplicate exists in the array.
+
+ */
+
+#include <iostream>
+#include <string>
+#include <vector>
+#include <map>
+#include <unordered_map>
+#include <list>
+#include <stack>
+#include <stack>
+#include <queue>
+
+using std::priority_queue;
+using std::list;
+using std::map;
+using std::stack;
+using std::unordered_map;
+using std::cout;
+using std::string;
+using std::cin;
+using std::endl;
+using std::vector;
+
+class Solution {
+public:
+    // my accepted solution, a little change on the binary search, need 6ms
+    int search(std::vector<int>& nums, int target) {
+        int rotate = 0;
+        for(int i = 1; i < nums.size(); i++) {
+            if(nums[i] < nums[i-1]) {
+                rotate = i;
+                break;
+            }
+        }
+        int lo = 0, hi = nums.size() - 1, mid = (lo + hi) / 2;
+        while(lo <= hi) {
+            mid = (lo + hi) / 2;
+            if(target < nums[(mid + rotate) % nums.size()]) {
+                hi = mid;
+            } else if(target > nums[(mid + rotate) % nums.size()]) {
+                lo = mid + 1;
+            } else {
+                return (mid + rotate) % nums.size();
+            }
+        }
+        return -1;
+    }
+
+    // see the discuss, find a promotion on my program, need 6ms
+
+    int search1(std::vector<int>& nums, int target) {
+        int lo=0, hi=nums.size() - 1;
+        // find the index of the smallest value using binary search.
+        // Loop will terminate since mid < hi, and lo or hi will shrink by at least 1.
+        // Proof by contradiction that mid < hi: if mid==hi, then lo==hi and loop would have been terminated.
+        while(lo < hi){ // 注意这里是<, 不是<=， 否则hi = mid，会无限循环
+            int mid=(lo + hi) / 2;
+            if(nums[mid] > nums[hi]) lo = mid + 1;
+                // 注意这里没有mid + 1， 因为mid = （lo + hi) / 2;总是会向下取，所以不需要hi - 1，就会向下自动取值
+                // 例如5，1， 3 如果有mid - 1，将会认为5是最小值， 如果mid不大于最大值，最小值就在mid左半部分，当然也可能是mid，所以不能是mid -1
+                // 而下面的二分查找中，判断如果mid<target,当然hi = mid - 1，不用再考虑mid了
+            else hi = mid;
+        }
+        // lo==hi is the index of the smallest value and also the number of places rotated.
+        int rot = lo;
+        lo = 0;hi = nums.size() - 1;
+        // The usual binary search and accounting for rotation.
+        while(lo<=hi){
+            int mid = (lo + hi) / 2;
+            int realmid = (mid + rot) % nums.size();
+            if(nums[realmid] == target) return realmid;
+            // 这里是二分查找，必须有lo = mid + 1；因为mid会向小端靠近，如果没有会导致无限循环，比如【0，1】查找 1 ，lo = 0, hi = 1,mid = 0,无限循环
+            if(nums[realmid] < target) lo = mid + 1;
+            else hi = mid - 1;
+        }
+        return -1;
+    }
+
+
+
+};
+
+int main() {
+    Solution s;
+    std::vector<int> a = {4, 5, 6, 7, 0, 1, 2};
+    int target = 0;
+    cout << s.search1(a,target);
+
+}
