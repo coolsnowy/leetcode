@@ -12,7 +12,6 @@
 #include <sstream>
 #include <algorithm>
 
-
 using std::priority_queue;
 using std::vector;
 using std::map;
